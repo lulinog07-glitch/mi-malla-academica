@@ -1,0 +1,367 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#526b55">
+<title>Mi Malla Académica</title>
+<style>
+:root {
+  --verde:#526b55;
+  --verde-claro:#e5ece2;
+  --crema:#f8f5ed;
+  --marron:#735d49;
+  --texto:#343b32;
+  --blanco:#fffefa;
+  --borde:#e2e3d8;
+}
+* {box-sizing:border-box}
+body {
+  margin:0;
+  background:var(--crema);
+  color:var(--texto);
+  font-family:Arial,sans-serif;
+}
+header {
+  background:var(--verde);
+  color:white;
+  padding:24px 20px;
+}
+header h1 {margin:0;font-size:25px}
+header p {margin:8px 0 0;color:#e7eee4}
+main {max-width:1000px;margin:auto;padding:20px}
+nav {
+  display:flex;gap:8px;flex-wrap:wrap;
+  margin-bottom:20px;
+}
+nav button, button {
+  border:0;border-radius:10px;padding:11px 14px;
+  cursor:pointer;font-size:14px;
+}
+nav button {background:#e8e8dd;color:var(--texto)}
+nav button.active, .primary {
+  background:var(--verde);color:white;
+}
+.card {
+  background:var(--blanco);border:1px solid var(--borde);
+  border-radius:16px;padding:18px;margin-bottom:16px;
+}
+h2 {font-size:20px;margin:0 0 15px}
+h3 {font-size:16px;margin:0 0 8px}
+.muted {color:#72766b;font-size:14px;line-height:1.5}
+.stats {
+  display:grid;grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:12px;margin-bottom:18px;
+}
+.stat {background:var(--verde-claro);padding:15px;border-radius:14px}
+.stat strong {display:block;font-size:25px;margin-bottom:5px}
+form {display:grid;gap:12px}
+label {font-size:14px;font-weight:bold}
+input,select,textarea {
+  display:block;width:100%;margin-top:6px;padding:11px;
+  border:1px solid #d8dbd0;border-radius:9px;
+  background:white;color:var(--texto);font:inherit;
+}
+.row {display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.item {
+  border:1px solid var(--borde);border-radius:12px;
+  padding:13px;margin-top:10px;
+  display:flex;justify-content:space-between;gap:10px;
+}
+.item small {display:block;color:#777b70;margin-top:5px}
+.tag {
+  display:inline-block;background:var(--verde-claro);
+  padding:5px 8px;border-radius:20px;font-size:12px;
+}
+.delete {background:#f3e4df;color:#854a3c;align-self:center}
+.empty {padding:18px;text-align:center;color:#777b70}
+footer {text-align:center;padding:20px;color:#777b70;font-size:12px}
+[hidden] {display:none!important}
+@media(max-width:600px) {
+  main {padding:13px}
+  header {padding:20px 15px}
+  .stats {gap:7px}
+  .stat {padding:11px}
+  .stat strong {font-size:21px}
+  nav {display:grid;grid-template-columns:1fr 1fr}
+  nav button {width:100%}
+  .row {grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<header>
+  <h1>🌿 Mi Malla Académica</h1>
+  <p>Tu camino de estudio, organizado a tu manera.</p>
+</header>
+
+<main>
+  <section class="stats">
+    <div class="stat"><strong id="countSubjects">0</strong><span>Materias</span></div>
+    <div class="stat"><strong id="countExams">0</strong><span>Evaluaciones</span></div>
+    <div class="stat"><strong id="countHours">0</strong><span>Horas de estudio</span></div>
+  </section>
+
+  <nav aria-label="Secciones">
+    <button class="active" data-tab="inicio">🏡 Inicio</button>
+    <button data-tab="materias">📚 Materias</button>
+    <button data-tab="horarios">🗓️ Horarios</button>
+    <button data-tab="evaluaciones">✏️ Evaluaciones</button>
+    <button data-tab="estudio">⏳ Estudio</button>
+  </nav>
+
+  <section id="inicio" class="panel">
+    <div class="card">
+      <h2>¡Hola! 🌱</h2>
+      <p>Este es tu espacio para organizar la facultad.</p>
+      <p class="muted">Agregá tus materias, organizá tus horarios y registrá tus evaluaciones y sesiones de estudio.</p>
+    </div>
+    <div class="card">
+      <h2>📌 Próximas evaluaciones</h2>
+      <div id="upcoming"></div>
+    </div>
+    <div class="card">
+      <h2>☁️ Conexiones</h2>
+      <p class="muted">Google Calendar: todavía no conectado.</p>
+      <p class="muted">Excel de OneDrive: todavía no conectado.</p>
+      <p class="muted">Tus registros actuales se guardan en este navegador. Exportalos antes de cambiar de dispositivo o borrar los datos del navegador.</p>
+      <button class="primary" id="exportData">Exportar mis datos</button>
+      <label style="display:block;margin-top:15px">
+        Importar una copia de seguridad
+        <input type="file" id="importData" accept=".json,application/json">
+      </label>
+    </div>
+  </section>
+
+  <section id="materias" class="panel" hidden>
+    <div class="card">
+      <h2>📚 Mis materias</h2>
+      <form id="subjectForm">
+        <label>Nombre de la materia
+          <input name="name" required placeholder="Ej. Lengua Inglesa I">
+        </label>
+        <div class="row">
+          <label>Año
+            <select name="year">
+              <option>1.º año</option><option>2.º año</option>
+              <option>3.º año</option><option>4.º año</option>
+            </select>
+          </label>
+          <label>Cuatrimestre
+            <select name="term">
+              <option>Anual</option><option>1.º cuatrimestre</option>
+              <option>2.º cuatrimestre</option>
+            </select>
+          </label>
+        </div>
+        <label>Estado
+          <select name="status">
+            <option>En curso</option><option>Pendiente</option>
+            <option>Aprobada</option><option>Regularizada</option>
+          </select>
+        </label>
+        <button class="primary">Agregar materia</button>
+      </form>
+    </div>
+    <div class="card"><h2>Mi lista</h2><div id="subjectList"></div></div>
+  </section>
+
+  <section id="horarios" class="panel" hidden>
+    <div class="card">
+      <h2>🗓️ Horarios de clase</h2>
+      <form id="scheduleForm">
+        <label>Materia
+          <select name="subject" class="subjectOptions" required></select>
+        </label>
+        <label>Día
+          <select name="day">
+            <option>Lunes</option><option>Martes</option><option>Miércoles</option>
+            <option>Jueves</option><option>Viernes</option><option>Sábado</option>
+          </select>
+        </label>
+        <div class="row">
+          <label>Desde<input type="time" name="start" required></label>
+          <label>Hasta<input type="time" name="end" required></label>
+        </div>
+        <label>Aula o lugar (opcional)<input name="place" placeholder="Ej. Aula 4"></label>
+        <button class="primary">Agregar horario</button>
+      </form>
+    </div>
+    <div class="card"><h2>Mi semana</h2><div id="scheduleList"></div></div>
+  </section>
+
+  <section id="evaluaciones" class="panel" hidden>
+    <div class="card">
+      <h2>✏️ Evaluaciones y entregas</h2>
+      <form id="examForm">
+        <label>Materia
+          <select name="subject" class="subjectOptions" required></select>
+        </label>
+        <label>Evaluación o entrega
+          <input name="title" required placeholder="Ej. Primer parcial">
+        </label>
+        <div class="row">
+          <label>Fecha<input name="date" type="date" required></label>
+          <label>Nota (opcional)<input name="grade" type="number" min="1" max="10" step="0.01" placeholder="Ej. 8"></label>
+        </div>
+        <button class="primary">Guardar evaluación</button>
+      </form>
+    </div>
+    <div class="card"><h2>Mi calendario académico</h2><div id="examList"></div></div>
+  </section>
+
+  <section id="estudio" class="panel" hidden>
+    <div class="card">
+      <h2>⏳ Registrar horas de estudio</h2>
+      <form id="studyForm">
+        <label>Materia
+          <select name="subject" class="subjectOptions" required></select>
+        </label>
+        <div class="row">
+          <label>Fecha<input name="date" type="date" required></label>
+          <label>Horas<input name="hours" type="number" min="0.25" max="24" step="0.25" required placeholder="Ej. 1.5"></label>
+        </div>
+        <label>¿Qué estudiaste? (opcional)
+          <textarea name="notes" rows="2" placeholder="Tema, unidad o actividad"></textarea>
+        </label>
+        <button class="primary">Registrar estudio</button>
+      </form>
+    </div>
+    <div class="card"><h2>Mi registro</h2><div id="studyList"></div></div>
+  </section>
+</main>
+<footer>Mi Malla Académica · Tu espacio de aprendizaje 🌿</footer>
+
+<script>
+const blank = {subjects:[], schedules:[], exams:[], study:[]};
+let data;
+try {
+  data = JSON.parse(localStorage.getItem("miMallaAcademica") || "null") || blank;
+} catch { data = blank; }
+
+function save() {
+  localStorage.setItem("miMallaAcademica", JSON.stringify(data));
+  render();
+}
+function escapeHTML(value) {
+  return String(value ?? "").replace(/[&<>"']/g, c => ({
+    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+  })[c]);
+}
+function id() { return crypto.randomUUID ? crypto.randomUUID() : String(Date.now()+Math.random()); }
+function subjectName(subjectId) {
+  return data.subjects.find(s => s.id === subjectId)?.name || "Materia eliminada";
+}
+function dateText(value) {
+  if (!value) return "";
+  const [y,m,d] = value.split("-");
+  return `${d}/${m}/${y}`;
+}
+function listItems(elementId, items, makeContent) {
+  const el = document.getElementById(elementId);
+  if (!items.length) {
+    el.innerHTML = '<div class="empty">Todavía no hay registros.</div>';
+    return;
+  }
+  el.innerHTML = items.map(item => `
+    <div class="item">
+      <div>${makeContent(item)}</div>
+      <button class="delete" data-delete="${escapeHTML(item.id)}" data-kind="${elementId}">Eliminar</button>
+    </div>`).join("");
+}
+function render() {
+  document.getElementById("countSubjects").textContent = data.subjects.length;
+  document.getElementById("countExams").textContent = data.exams.length;
+  document.getElementById("countHours").textContent =
+    data.study.reduce((sum, s) => sum + Number(s.hours || 0), 0).toLocaleString("es-AR");
+
+  document.querySelectorAll(".subjectOptions").forEach(select => {
+    const previous = select.value;
+    select.innerHTML = '<option value="">Elegí una materia</option>' +
+      data.subjects.map(s => `<option value="${escapeHTML(s.id)}">${escapeHTML(s.name)}</option>`).join("");
+    if (data.subjects.some(s => s.id === previous)) select.value = previous;
+    select.disabled = data.subjects.length === 0;
+  });
+
+  listItems("subjectList", data.subjects, s =>
+    `<strong>${escapeHTML(s.name)}</strong><small>${escapeHTML(s.year)} · ${escapeHTML(s.term)}</small><span class="tag">${escapeHTML(s.status)}</span>`);
+  const days = ["Lunes","Martes","Miércoles","Jueves","Viernes","Sábado"];
+  listItems("scheduleList", [...data.schedules].sort((a,b) =>
+    days.indexOf(a.day)-days.indexOf(b.day) || a.start.localeCompare(b.start)), s =>
+    `<strong>${escapeHTML(s.day)} · ${escapeHTML(s.start)}–${escapeHTML(s.end)}</strong><small>${escapeHTML(subjectName(s.subject))}${s.place ? " · "+escapeHTML(s.place) : ""}</small>`);
+  const sortedExams = [...data.exams].sort((a,b)=>a.date.localeCompare(b.date));
+  listItems("examList", sortedExams, e =>
+    `<strong>${escapeHTML(e.title)}</strong><small>${escapeHTML(subjectName(e.subject))} · ${dateText(e.date)}</small>${e.grade ? `<span class="tag">Nota: ${escapeHTML(e.grade)}</span>` : ""}`);
+  listItems("studyList", [...data.study].sort((a,b)=>b.date.localeCompare(a.date)), s =>
+    `<strong>${escapeHTML(subjectName(s.subject))} · ${escapeHTML(s.hours)} h</strong><small>${dateText(s.date)}${s.notes ? " · "+escapeHTML(s.notes) : ""}</small>`);
+
+  const upcoming = sortedExams.filter(e => e.date >= new Date().toISOString().slice(0,10));
+  const upcomingEl = document.getElementById("upcoming");
+  upcomingEl.innerHTML = upcoming.length
+    ? upcoming.slice(0,5).map(e => `<div class="item"><div><strong>${escapeHTML(e.title)}</strong><small>${escapeHTML(subjectName(e.subject))} · ${dateText(e.date)}</small></div></div>`).join("")
+    : '<div class="empty">Todavía no registraste próximas evaluaciones.</div>';
+}
+document.querySelectorAll("nav button").forEach(button => {
+  button.addEventListener("click", () => {
+    document.querySelectorAll("nav button").forEach(b => b.classList.toggle("active", b===button));
+    document.querySelectorAll(".panel").forEach(p => p.hidden = p.id !== button.dataset.tab);
+  });
+});
+document.getElementById("subjectForm").addEventListener("submit", e => {
+  e.preventDefault();
+  const f = new FormData(e.target);
+  data.subjects.push({id:id(),name:f.get("name").trim(),year:f.get("year"),term:f.get("term"),status:f.get("status")});
+  e.target.reset(); save();
+});
+document.getElementById("scheduleForm").addEventListener("submit", e => {
+  e.preventDefault(); const f = new FormData(e.target);
+  if (!f.get("subject")) return alert("Primero agregá una materia.");
+  if (f.get("end") <= f.get("start")) return alert("La hora de fin debe ser posterior a la de inicio.");
+  data.schedules.push({id:id(),subject:f.get("subject"),day:f.get("day"),start:f.get("start"),end:f.get("end"),place:f.get("place").trim()});
+  e.target.reset(); save();
+});
+document.getElementById("examForm").addEventListener("submit", e => {
+  e.preventDefault(); const f = new FormData(e.target);
+  if (!f.get("subject")) return alert("Primero agregá una materia.");
+  data.exams.push({id:id(),subject:f.get("subject"),title:f.get("title").trim(),date:f.get("date"),grade:f.get("grade")});
+  e.target.reset(); save();
+});
+document.getElementById("studyForm").addEventListener("submit", e => {
+  e.preventDefault(); const f = new FormData(e.target);
+  if (!f.get("subject")) return alert("Primero agregá una materia.");
+  data.study.push({id:id(),subject:f.get("subject"),date:f.get("date"),hours:f.get("hours"),notes:f.get("notes").trim()});
+  e.target.reset(); save();
+});
+const targets = {
+  subjectList:"subjects",scheduleList:"schedules",examList:"exams",studyList:"study"
+};
+document.addEventListener("click", e => {
+  const button = e.target.closest("[data-delete]");
+  if (!button) return;
+  const kind = targets[button.dataset.kind];
+  if (!kind || !confirm("¿Querés eliminar este registro?")) return;
+  data[kind] = data[kind].filter(item => item.id !== button.dataset.delete);
+  save();
+});
+document.getElementById("exportData").addEventListener("click", () => {
+  const blob = new Blob([JSON.stringify(data,null,2)], {type:"application/json"});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href=url; a.download="mi-malla-academica-copia.json"; a.click();
+  URL.revokeObjectURL(url);
+});
+document.getElementById("importData").addEventListener("change", async e => {
+  const file = e.target.files[0]; if (!file) return;
+  try {
+    const imported = JSON.parse(await file.text());
+    if (!["subjects","schedules","exams","study"].every(k => Array.isArray(imported[k]))) throw Error();
+    if (!confirm("Importar reemplazará los registros actuales de esta app. ¿Continuar?")) return;
+    data = imported; save(); alert("Copia importada correctamente.");
+  } catch { alert("El archivo no parece ser una copia válida de Mi Malla Académica."); }
+  e.target.value="";
+});
+render();
+</script>
+</body>
+</html>
