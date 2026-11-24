@@ -21,7 +21,7 @@
 <section id="home" class="panel"><div class="card"><h2>Welcome</h2><p>Organize your subjects, important dates, tasks, and materials in one place.</p><p class="muted">The app calculates regularity, promotion, and approval averages. If you meet the promotion requirement, you are approved automatically. Otherwise, final exam grades are included in your approval average.</p></div><div class="card"><h2>Subject Averages</h2><div id="averages"></div></div><div class="card"><h2>Upcoming Dates</h2><div id="upcoming"></div></div><div class="card"><h2>Backup</h2><p class="muted">Your records are saved in this browser. Export backups regularly. Google Calendar and OneDrive Excel syncing are not connected yet.</p><button class="primary" id="export">Export Data</button><label style="display:block;margin-top:12px">Import JSON Backup<input type="file" id="import" accept=".json,application/json"></label></div></section>
 <section id="calendar" class="panel" hidden><div class="card" id="calendarBrowse"><div class="toolbar"><strong id="calTitle"></strong><div><button id="prev">‹</button> <button id="today">Today</button> <button id="next">›</button></div><div><button class="active" data-view="month">Month</button> <button data-view="year">Year</button></div></div><div id="monthView"><div class="month-grid" id="monthGrid"></div></div><div id="yearView" hidden><div class="year-grid" id="yearGrid"></div></div><div class="legend">🟩 Classes · 🩷 Midterms / Finals · 🟨 Tasks</div></div><div class="card" id="dayDetail" hidden><div class="toolbar"><button id="backToCalendar">← Back to Calendar</button><div><button id="dayPrev">‹ Previous Day</button> <button id="dayNext">Next Day ›</button></div></div><h2 id="dayTitle">Activities for</h2><div id="dayEvents"></div><div style="margin-top:16px"><label for="dayNotes">Notes for this day</label><textarea id="dayNotes" rows="4" placeholder="Write reminders or notes for this day..."></textarea><button class="primary" id="saveDayNotes" style="margin-top:8px">Save Notes</button></div></div></section>
 <section id="subjects" class="panel" hidden><div class="card"><h2>Subjects</h2><form id="subjectForm"><label>Title<input name="name" required placeholder="Lengua Inglesa I"></label><div class="row"><label>Year<select name="year"><option>Year 1</option><option>Year 2</option><option>Year 3</option><option>Year 4</option></select></label><label>Term<select name="term"><option>Full Year</option><option>First Semester</option><option>Second Semester</option></select></label></div><label>Status<select name="status"><option>In Progress</option><option>Pending</option><option>Coursework Completed</option><option>Passed</option></select></label><button class="primary">Add Subject</button></form></div><div class="card"><h2>My Subjects</h2><div id="subjectList"></div></div></section>
-<section id="schedule" class="panel" hidden><div class="card"><h2>Class Schedule</h2><form id="scheduleForm"><label>Subject<select class="subjects" name="subject" required></select></label><label>Day<select name="day"><option>Monday</option><option>Tuesday</option><option>Wednesday</option><option>Thursday</option><option>Friday</option><option>Saturday</option><option>Sunday</option></select></label><div class="row"><label>Start Time<input type="time" name="start" required></label><label>End Time<input type="time" name="end" required></label></div><label>Room or Location<input name="place"></label><button class="primary">Add Class Time</button></form></div><div class="card"><h2>My Week</h2><div id="scheduleList"></div></div></section>
+<section id="schedule" class="panel" hidden><div class="card"><h2>Class Schedule</h2><form id="scheduleForm"><label>Subject<select class="subjects" name="subject" required></select></label><label>Day<select name="day"><option>Monday</option><option>Tuesday</option><option>Wednesday</option><option>Thursday</option><option>Friday</option><option>Saturday</option><option>Sunday</option></select></label><div class="row"><label>Start Time<input type="time" name="start" required></label><label>End Time<input type="time" name="end" required></label></div><label>Room or Location<input name="place"></label><button class="primary">Add Class Time</button></form></div><div class="card"><h2>Import a timetable</h2><p class="muted">Upload an Excel file (.xlsx, .xls, .csv) or a Google Calendar export (.ics or .zip). The imported events are added to your existing schedule.</p><label>Choose file<input id="scheduleImportFile" type="file" accept=".xlsx,.xls,.csv,.ics,.zip,text/calendar,text/csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"></label><p class="muted">For Excel, use columns named Subject, Day, Start, End and optionally Location. For Google Calendar, event titles should match your subject names.</p><button type="button" id="downloadScheduleTemplate">Download Excel/CSV template</button><div id="scheduleImportStatus" class="muted" aria-live="polite"></div></div><div class="card"><h2>My Week</h2><div id="scheduleList"></div></div></section>
 <section id="exams" class="panel" hidden><div class="card"><h2>Midterms / Finals</h2><p class="muted">Countdowns are shown only while an exam is Pending. Passed and Failed exams do not show elapsed time.</p><form id="examForm"><label>Subject<select class="subjects" name="subject" required></select></label><label>Type<select name="type"><option>Midterm</option><option>Make-up Exam</option><option>Final Exam</option></select></label><label>Title<input name="title" required placeholder="First midterm"></label><div class="row"><label>Date<input name="date" type="date" required></label><label>Time<input name="time" type="time"></label></div><div class="row"><label>Status<select name="status"><option>Pending</option><option>Passed</option><option>Failed</option></select></label><label>Grade (1 to 10)<input name="grade" type="number" min="1" max="10" step=".01"></label></div><p class="muted">Enter a grade for each midterm or make-up exam. Make-up exam grades count toward regularity, but not toward promotion.</p><button class="primary">Save Exam</button></form></div><div class="card"><h2>My Midterms and Finals</h2><div id="examList"></div></div></section>
 <section id="tasks" class="panel" hidden><div class="card"><h2>Assignments and Practical Work</h2><p class="muted">Every task with a due date shows how many days remain, whether it is due today, or how overdue it is.</p><form id="taskForm"><label>Subject<select class="subjects" name="subject" required></select></label><label>Task<input name="title" required placeholder="Submit Unit 2 assignment"></label><div class="row"><label>Due Date<input name="date" type="date" required></label><label>Priority<select name="priority"><option>Normal</option><option>High</option><option>Urgent</option><option>Low</option></select></label></div><label>Status<select name="status"><option>Pending</option><option>In Progress</option><option>Completed</option></select></label><label>Grade for this work (optional)<input name="grade" type="number" min="1" max="10" step=".01"></label><label>Details<textarea name="notes" rows="2"></textarea></label><button class="primary">Save Task</button></form></div><div class="card"><h2>My Tasks</h2><div id="taskList"></div></div></section>
 <section id="study" class="panel" hidden><div class="card"><h2>Log Study Hours</h2><form id="studyForm"><label>Subject<select class="subjects" name="subject" required></select></label><div class="row"><label>Date<input type="date" name="date" required></label><label>Hours<input type="number" name="hours" min=".25" max="24" step=".25" required></label></div><label>What did you study?<textarea name="notes" rows="2"></textarea></label><button class="primary">Log Study Session</button></form></div><div class="card"><h2>My Log</h2><div id="studyList"></div></div></section>
@@ -42,6 +42,7 @@
 </main>
 <div id="editModal" hidden><div class="edit-box"><div class="toolbar"><h2 id="editHeading">Edit record</h2><button type="button" class="secondary" id="closeEdit">✕</button></div><form id="editForm"><div id="editFields"></div><div class="edit-actions"><button type="button" class="secondary" id="cancelEdit">Cancel</button><button class="primary" type="submit">Save Changes</button></div></form></div></div>
 <footer>My Academic Planner · One step at a time</footer>
+<script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script><script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
 <script>
 const blank={subjects:[],schedules:[],exams:[],tasks:[],study:[],attendance:[],materials:[],settings:{promotionThreshold:8,firstTermStart:'',firstTermEnd:'',schoolYearEnd:''}};let d;try{d=JSON.parse(localStorage.getItem('malla-v2')||'null')||JSON.parse(localStorage.getItem('miMallaAcademica')||'null')||structuredClone(blank)}catch{d=structuredClone(blank)}for(let k of ['subjects','schedules','exams','tasks','study','attendance','materials'])if(!Array.isArray(d[k]))d[k]=[];d.settings={promotionThreshold:8,firstTermStart:'',firstTermEnd:'',schoolYearEnd:'',...(d.settings||{})};d.subjects=d.subjects.map((x,i)=>({...x,color:x.color||['#9BC2E6','#D80688','#F8AAE0','#A6A6A6','#0070C0','#E26B0A','#D491EF','#A81FDF','#F4D620'][i%9],averageMode:x.averageMode||'midterms'}));
 function subjectConfig(s){const c=s.gradeConfig||{};return {threshold:Number(c.threshold??d.settings.promotionThreshold??8),autoApproveOnPromotion:c.autoApproveOnPromotion!==false,regularity:{midterm:c.regularity?.midterm!==false,makeup:c.regularity?.makeup!==false,tasks:c.regularity?.tasks!==false,finals:!!c.regularity?.finals},promotion:{midterm:c.promotion?.midterm!==false,makeup:!!c.promotion?.makeup,tasks:c.promotion?.tasks!==false,finals:!!c.promotion?.finals},approval:{midterm:c.approval?.midterm!==false,makeup:c.approval?.makeup!==false,tasks:c.approval?.tasks!==false,finals:c.approval?.finals!==false}};}
@@ -97,6 +98,81 @@ document.querySelectorAll('nav [data-tab]').forEach(b=>b.onclick=()=>{document.q
 function bind(form,fn){document.getElementById(form).onsubmit=e=>{e.preventDefault();let f=new FormData(e.target);fn(f);e.target.reset();persist()}}
 bind('subjectForm',f=>d.subjects.push({id:uid(),name:f.get('name').trim(),year:f.get('year'),term:f.get('term'),status:f.get('status'),color:['#9BC2E6','#D80688','#F8AAE0','#A6A6A6','#0070C0','#E26B0A','#D491EF','#A81FDF','#F4D620'][d.subjects.length%9],averageMode:'midterms',gradeConfig:{threshold:Number(d.settings.promotionThreshold||8),autoApproveOnPromotion:true,regularity:{midterm:true,makeup:true,tasks:true,finals:false},promotion:{midterm:true,makeup:false,tasks:true,finals:false},approval:{midterm:true,makeup:true,tasks:true,finals:true}}}));
 bind('scheduleForm',f=>{if(!f.get('subject'))throw alert('Please add a subject first.');if(f.get('end')<=f.get('start'))throw alert('The end time must be later than the start time.');d.schedules.push({id:uid(),subject:f.get('subject'),day:f.get('day'),start:f.get('start'),end:f.get('end'),place:f.get('place')})});
+
+function norm(v){return String(v??'').trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/\s+/g,' ')}
+function dayValue(v){const n=norm(v);const map={monday:'Monday',lunes:'Monday',mon:'Monday',martes:'Tuesday',tuesday:'Tuesday',tue:'Tuesday',miercoles:'Wednesday',wednesday:'Wednesday',wed:'Wednesday',jueves:'Thursday',thursday:'Thursday',thu:'Thursday',viernes:'Friday',friday:'Friday',fri:'Friday',sabado:'Saturday',saturday:'Saturday',sat:'Saturday',domingo:'Sunday',sunday:'Sunday',sun:'Sunday'};return map[n]||''}
+function timeValue(v){
+ if(v instanceof Date)return `${String(v.getHours()).padStart(2,'0')}:${String(v.getMinutes()).padStart(2,'0')}`;
+ if(typeof v==='number'&&isFinite(v)){let mins=Math.round((v%1)*1440);return `${String(Math.floor(mins/60)).padStart(2,'0')}:${String(mins%60).padStart(2,'0')}`}
+ const m=String(v??'').trim().match(/^(\d{1,2}):(\d{2})(?::\d{2})?$/);return m?`${String(Number(m[1])).padStart(2,'0')}:${m[2]}`:'';
+}
+function findSubject(name){const n=norm(name);return d.subjects.find(x=>norm(x.name)===n)||d.subjects.find(x=>n&&norm(x.name).includes(n))||d.subjects.find(x=>n&&n.includes(norm(x.name)))}
+function addImported(rows){
+ let added=0,skipped=0,duplicates=0;
+ for(const r of rows){
+  const subject=findSubject(r.subject),day=dayValue(r.day),start=timeValue(r.start),end=timeValue(r.end);
+  if(!subject||!day||!start||!end||end<=start){skipped++;continue}
+  if(d.schedules.some(x=>x.subject===subject.id&&x.day===day&&x.start===start&&x.end===end)){duplicates++;continue}
+  d.schedules.push({id:uid(),subject:subject.id,day,start,end,place:String(r.place||'').trim()});added++;
+ }
+ persist();return {added,skipped,duplicates};
+}
+const dayNames=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+function parseICSDate(line){
+ const colon=line.indexOf(':');if(colon<0)return null;
+ const raw=line.slice(colon+1).trim();if(!/^\d{8}T\d{6}Z?$/.test(raw))return null;
+ const y=+raw.slice(0,4),mo=+raw.slice(4,6)-1,da=+raw.slice(6,8),hh=+raw.slice(9,11),mm=+raw.slice(11,13),ss=+raw.slice(13,15);
+ if(raw.endsWith('Z')){const dt=new Date(Date.UTC(y,mo,da,hh,mm,ss));return {day:dayNames[dt.getDay()],time:`${String(dt.getHours()).padStart(2,'0')}:${String(dt.getMinutes()).padStart(2,'0')}`}}
+ return {day:dayNames[new Date(y,mo,da,hh,mm,ss).getDay()],time:`${String(hh).padStart(2,'0')}:${String(mm).padStart(2,'0')}`};
+}
+function unescapeICS(v){return String(v||'').replace(/\\n/gi,' ').replace(/\\,/g,',').replace(/\\;/g,';').replace(/\\\\/g,'\\')}
+function parseICS(text){
+ const lines=text.replace(/\r\n/g,'\n').replace(/\r/g,'\n').split('\n').reduce((a,line)=>{if(/^[ \t]/.test(line)&&a.length)a[a.length-1]+=line.slice(1);else a.push(line);return a},[]);
+ const out=[];let ev=null;
+ for(const line of lines){
+  if(line==='BEGIN:VEVENT'){ev={};continue}
+  if(line==='END:VEVENT'){if(ev&&ev.DTSTART&&ev.DTEND){const a=parseICSDate(ev.DTSTART),b=parseICSDate(ev.DTEND);if(a&&b&&a.day===b.day&&b.time>a.time)out.push({subject:unescapeICS(ev.SUMMARY),day:a.day,start:a.time,end:b.time,place:unescapeICS(ev.LOCATION||'')})}ev=null;continue}
+  if(!ev)continue;const ix=line.indexOf(':');if(ix<0)continue;
+  const k=line.slice(0,ix).split(';')[0].toUpperCase();if(['DTSTART','DTEND','SUMMARY','LOCATION'].includes(k))ev[k]=line;
+ }
+ return out;
+}
+async function readScheduleFile(file){
+ const ext=file.name.toLowerCase().split('.').pop();
+ if(ext==='ics')return parseICS(await file.text());
+ if(ext==='zip'){
+  if(!window.JSZip)throw Error('ZIP reader could not load. Please upload the .ics file directly.');
+  const zip=await JSZip.loadAsync(file),names=Object.keys(zip.files).filter(n=>n.toLowerCase().endsWith('.ics')&&!zip.files[n].dir);
+  if(!names.length)throw Error('No .ics calendar file was found inside this ZIP.');
+  let all=[];for(const n of names)all=all.concat(parseICS(await zip.files[n].async('string')));return all;
+ }
+ if(['xlsx','xls','csv'].includes(ext)){
+  if(!window.XLSX)throw Error('Spreadsheet reader could not load. Check your internet connection and try again.');
+  const wb=XLSX.read(await file.arrayBuffer(),{type:'array',cellDates:true}),sheet=wb.Sheets[wb.SheetNames[0]];
+  return XLSX.utils.sheet_to_json(sheet,{defval:'',raw:true}).map(row=>{
+   const obj={};for(const [k,v] of Object.entries(row))obj[norm(k).replace(/[\s_-]+/g,'')]=v;
+   return {subject:obj.subject||obj.materia||obj.asignatura,day:obj.day||obj.dia,start:obj.start||obj.starttime||obj.inicio,end:obj.end||obj.endtime||obj.fin,place:obj.location||obj.place||obj.aula||obj.ubicacion};
+  });
+ }
+ throw Error('Unsupported file type. Choose .xlsx, .xls, .csv, .ics or .zip.');
+}
+document.getElementById('scheduleImportFile').addEventListener('change',async e=>{
+ const file=e.target.files?.[0],status=document.getElementById('scheduleImportStatus');if(!file)return;
+ status.textContent='Reading file…';
+ try{
+  const rows=await readScheduleFile(file);
+  const matched=rows.filter(r=>findSubject(r.subject)&&dayValue(r.day)&&timeValue(r.start)&&timeValue(r.end));
+  if(!matched.length){status.textContent='No matching classes found. Check that the subject names match your subjects and that the file includes day, start and end times.';return}
+  if(!confirm(`Found ${matched.length} possible class times. Add them to your current schedule?`)){status.textContent='Import cancelled.';return}
+  const result=addImported(rows);
+  status.textContent=`Imported ${result.added} class times. ${result.duplicates} duplicates skipped; ${result.skipped} rows could not be matched or had incomplete data.`;
+ }catch(err){status.textContent=err.message||'Could not read this file.'}
+ finally{e.target.value=''}
+});
+document.getElementById('downloadScheduleTemplate').onclick=()=>{
+ const csv='Subject,Day,Start,End,Location\nEnglish,Monday,08:00,09:20,Room 1\n';
+ const url=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));const a=document.createElement('a');a.href=url;a.download='class_schedule_template.csv';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
+};
 bind('examForm',f=>{if(!f.get('subject'))return alert('Please add a subject first.');d.exams.push({id:uid(),subject:f.get('subject'),type:f.get('type'),title:f.get('title').trim(),date:f.get('date'),time:f.get('time'),status:f.get('status'),grade:f.get('grade')})});
 bind('taskForm',f=>{if(!f.get('subject'))return alert('Please add a subject first.');d.tasks.push({id:uid(),subject:f.get('subject'),title:f.get('title').trim(),date:f.get('date'),priority:f.get('priority'),status:f.get('status'),notes:f.get('notes')})});
 bind('studyForm',f=>{if(!f.get('subject'))return alert('Please add a subject first.');d.study.push({id:uid(),subject:f.get('subject'),date:f.get('date'),hours:f.get('hours'),notes:f.get('notes')})});
